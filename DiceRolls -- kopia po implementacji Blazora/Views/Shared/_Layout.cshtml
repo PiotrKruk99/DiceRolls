@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta http-equiv="content-encoding" charset="utf-8" />
+    <meta http-equiv="content-language" content="pl" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="Author" content="Liberezo Piotr Kruk" />
+    <title>DiceRolls</title>
+    <meta name="description" content="Aplikacja umożliwiająca wspólne rzuty kośćmi na odległość." />
+    <meta name="keywords" content="kości, rpg, gry planszowe, k6, k20, granie na odległość, gry w sieci" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <script>
+        {
+            let cookies = document.cookie.split(';');
+            let isCookieAlert = false;
+
+            //for (let elem of cookies)
+            //    if ((elem.split('=')[0].includes("cookieAlert", 0)) && (elem.split('=')[1].incluses("yes", 0))) {
+            //        isCookieAlert = true;
+            //    }
+            for (let i = 0; i < cookies.length; i++) {
+                let s1 = cookies[i].split('=')[0];
+                let s2 = cookies[i].split('=')[1];
+                if (s1.includes('cookieAlert', 0))
+                    if (s2.includes('yes', 0))
+                        isCookieAlert = true;
+            }
+
+            if (!isCookieAlert) {
+                window.alert("Strona wykorzystuje pliki cookie do realizacji swoich funkcjonalności.");
+                let d = new Date();
+                d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+                document.cookie = "cookieAlert=yes;expires=" + d.toUTCString() + ";path=/";
+            }
+        }
+
+        //{
+        //    const autoRefreshCheckBox = document.getElementById("autoRefresh");
+        //    let isAutoRefresh = this.readRefreshCookie();
+
+        //    autoRefreshCheckBox.checked = isAutoRefresh;
+        //}
+    </script>
+</head>
+<body>
+    @RenderBody()
+
+    <script src="_framework/blazor.server.js"></script>
+    <script>
+        function inRange() {
+            const diceCount = document.getElementById("diceCount");
+            var x = parseInt(diceCount.value, 10);
+            if (isNaN(x)) diceCount.value = "1";
+            else
+                if (x > 30) diceCount.value = "30";
+                else
+                    if (x < 1) diceCount.value = "1";
+        }
+
+        function getDown() {
+            var diceCount = document.getElementById('diceCount');
+            var x = parseInt(diceCount.value, 10);
+            if (x > 1)
+                diceCount.value = x - 1;
+        }
+
+        function getUp() {
+            var diceCount = document.getElementById('diceCount');
+            var x = parseInt(diceCount.value, 10);
+            if (x < 30)
+                diceCount.value = x + 1;
+        }
+
+        function copyUrl() {
+            const ele = document.createElement('textarea');
+            ele.value = window.location.href;
+            ele.setAttribute('readonly', true)
+            // Following styling is to avoid flashing textarea on screen
+            ele.style.position = 'absolute';
+            ele.style.padding = 0;
+            ele.style.background = 'transparent';
+            ele.style.outline = 'none';
+            ele.style.left = '-100%';
+            document.body.appendChild(ele);
+            ele.select();
+            document.execCommand('copy');
+            document.body.removeChild(ele);
+        }
+
+        function resChar() {
+            const login = document.getElementById("login");
+            var x = String(login.value);
+
+            if (x.includes("^")) {
+                x = x.replace("^", "");
+                login.value = x;
+            }
+
+            if (x.includes("|")) {
+                x = x.replace("|", "");
+                login.value = x;
+            }
+        }
+
+        //function refreshChange() {
+        //    window.alert("poszło");
+        //}
+        
+        //function readRefreshCookie() {
+        //    let cookies = document.cookie.split(';');
+        //    let isAutoRefresh = false;
+
+        //    for (let i = 0; i < cookies.length; i++) {
+        //        let s1 = cookies[i].split('=')[0];
+        //        let s2 = cookies[i].split('=')[1];
+        //        if (s1.includes('autoRefresh', 0))
+        //            if (s2.includes('yes', 0))
+        //                isAutoRefresh = true;
+        //    }
+
+        //    return isAutoRefresh;
+        //}
+
+        window.blazorCookies = {
+            writeRefreshCookie: function (value) {
+                let d = new Date();
+                d.setTime(d.getTime() + (60 * 60 * 1000));
+                document.cookie = "autoRefresh=" + (value ? "yes" : "no") + ";expires=" + d.toUTCString() + ";path=/";
+                return true;
+            },
+
+            readRefreshCookie: function () {
+                let cookies = document.cookie.split(';');
+                let isAutoRefresh = false;
+
+                for (let i = 0; i < cookies.length; i++) {
+                    let s1 = cookies[i].split('=')[0];
+                    let s2 = cookies[i].split('=')[1];
+                    if (s1.includes('autoRefresh', 0))
+                        if (s2.includes('yes', 0))
+                            isAutoRefresh = true;
+                }
+
+                //document.getElementById('autoRefresh').value = isAutoRefresh;
+
+                return isAutoRefresh;
+            }
+        }
+    </script>
+    <noscript>
+        <p>
+            Strona wykorzystuje pliki cookie do realizacji swoich funkcjonalności. Dla uzyskania najlepszych
+            wrażeń z używania strony włącz obsługę Java Script w swojej przeglądarce.
+        </p>
+    </noscript>
+</body>
+</html>
