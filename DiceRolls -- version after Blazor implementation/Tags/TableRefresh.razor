@@ -15,11 +15,9 @@
 
     private bool autoRefresh
     {
-        get
-        {
+        get =>
             //_autoRefresh = JSRuntime.InvokeAsync<bool>("blazorCookies.readRefreshCookie", null).Result;
-            return _autoRefresh;
-        }
+            _autoRefresh;
         set
         {
             _autoRefresh = value;

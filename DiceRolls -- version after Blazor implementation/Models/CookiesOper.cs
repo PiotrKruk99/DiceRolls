@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace DiceRolls.Models
@@ -16,8 +13,6 @@ namespace DiceRolls.Models
             };
 
             response.Cookies.Append(sessionId.ToString(), login, opts);
-
-            return;
         }
 
         public static string IsLogged(int sessionId, HttpRequest request)
@@ -39,8 +34,6 @@ namespace DiceRolls.Models
 
             response.Cookies.Append("diceCount", diceCount.ToString(), opts);
             response.Cookies.Append("diceType", diceType.ToString(), opts);
-
-            return;
         }
 
         public static int GetCount(HttpRequest request)

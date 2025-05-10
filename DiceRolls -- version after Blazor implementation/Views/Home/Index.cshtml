@@ -23,7 +23,7 @@
         <button class="updown" type="button" onclick="getUp()">></button>
 
         <select class="send" id="dice" name="diceType">
-            @foreach (var elem in (new int[] { 2, 4, 6, 8, 10, 12, 16, 20, 100 }))
+            @foreach (var elem in (new[] { 2, 4, 6, 8, 10, 12, 16, 20, 100 }))
             {
                 if (elem == ViewBag.diceType)
                 {
@@ -78,7 +78,7 @@
     <hr />
     <p>
         <br /><b>Aktualizacje:</b><br /><br />
-        9-5-2021 - Dodana funkcjonalność zapamietywania rodzaju ostatnio wybranych kości i ich ilości do
+        9-5-2021 - Dodana funkcjonalność zapamiętywania rodzaju ostatnio wybranych kości i ich ilości do
         wykorzystania przy kolejnym rzucie.<br /><br />
         23-8-2021 - Dodana możliwość włączenia autoodświeżania tabeli wyników.<br /><br />
     </p>

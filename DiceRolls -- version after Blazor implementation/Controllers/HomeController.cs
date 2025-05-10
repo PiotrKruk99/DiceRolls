@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DiceRolls.Models;
@@ -93,8 +91,8 @@ namespace DiceRolls.Controllers
             if (diceCount < 1 || diceCount > 30) diceCount = 1;
             ViewBag.diceCount = diceCount;
 
-            int diceType = CookiesOper.GetType(Request);
-            if (!(new int[] { 2, 4, 6, 8, 10, 12, 16, 20, 100 }).Contains(diceType)) diceType = 2;
+            var diceType = CookiesOper.GetType(Request);
+            if (!(new [] { 2, 4, 6, 8, 10, 12, 16, 20, 100 }).Contains(diceType)) diceType = 2;
             ViewBag.diceType = diceType;
 
 
@@ -136,7 +134,7 @@ namespace DiceRolls.Controllers
             if (diceCount < 1 || diceCount > 30)
                 diceCount = 1;
 
-            if (!(new int[] { 2, 4, 6, 8, 10, 12, 16, 20, 100 }).Contains(diceType))
+            if (!(new [] { 2, 4, 6, 8, 10, 12, 16, 20, 100 }).Contains(diceType))
                 diceType = 2;
 
             CookiesOper.LastThrow(diceCount, diceType, Response);
