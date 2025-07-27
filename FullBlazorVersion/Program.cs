@@ -1,3 +1,4 @@
+using DiceRolls.Services;
 using FullBlazorVersion.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<IRandomizeService, RandomizeService>();
 
 var app = builder.Build();
 
