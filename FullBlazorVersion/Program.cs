@@ -1,5 +1,6 @@
-using DiceRolls.Services;
 using FullBlazorVersion.Components;
+using FullBlazorVersion.Services.Randomize;
+using FullBlazorVersion.Services.SessionStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<IRandomizeService, RandomizeService>();
+builder.Services.AddScoped<SessionStorageService>();
 
 var app = builder.Build();
 
