@@ -1,9 +1,9 @@
-using System;
+using FullBlazorVersion.Enums;
 
-namespace DiceRolls.Services
+namespace FullBlazorVersion.Services.Randomize
 {
     public interface IRandomizeService
     {
-        
+        IEnumerable<int> GetRandomDice(int count, DiceTypeEnum diceType);
     }
 }
