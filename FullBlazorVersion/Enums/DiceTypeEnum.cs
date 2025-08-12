@@ -1,4 +1,4 @@
-namespace FullBlazorVersion.Enums;
+namespace DiceRolls.Enums;
 
 public enum DiceTypeEnum
 {

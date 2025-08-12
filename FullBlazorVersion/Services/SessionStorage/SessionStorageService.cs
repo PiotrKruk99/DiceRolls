@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace FullBlazorVersion.Services.SessionStorage;
+namespace DiceRolls.Services.SessionStorage;
 
 public class SessionStorageService
 {

@@ -1,6 +1,6 @@
-using FullBlazorVersion.Components;
-using FullBlazorVersion.Services.Randomize;
-using FullBlazorVersion.Services.SessionStorage;
+using DiceRolls.Components;
+using DiceRolls.Services.Randomize;
+using DiceRolls.Services.SessionStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 

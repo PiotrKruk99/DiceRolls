@@ -1,7 +1,7 @@
-using FullBlazorVersion.Enums;
+using DiceRolls.Enums;
 using System.Security.Cryptography;
 
-namespace FullBlazorVersion.Services.Randomize
+namespace DiceRolls.Services.Randomize
 {
     public class RandomizeService : IRandomizeService
     {

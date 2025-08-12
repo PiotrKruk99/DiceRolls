@@ -1,6 +1,6 @@
-using FullBlazorVersion.Enums;
+using DiceRolls.Enums;
 
-namespace FullBlazorVersion.Services.Randomize
+namespace DiceRolls.Services.Randomize
 {
     public interface IRandomizeService
     {
