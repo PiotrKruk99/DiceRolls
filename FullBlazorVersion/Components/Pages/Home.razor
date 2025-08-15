@@ -12,7 +12,7 @@ Welcome to your new app.
     {
         await Task.CompletedTask;
         
-        var sessionId = Guid.NewGuid();
+        var sessionId = Guid.NewGuid().ToString().Replace("-", "");
         NavigationManager.NavigateTo($"/session/{ sessionId.ToString() }");
     }
 }
