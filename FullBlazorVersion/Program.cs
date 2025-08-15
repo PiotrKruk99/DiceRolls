@@ -1,6 +1,10 @@
 using DiceRolls.Components;
+using DiceRolls.Models;
+using DiceRolls.Repositories.Throw;
 using DiceRolls.Services.Randomize;
 using DiceRolls.Services.SessionStorage;
+using DiceRolls.Services.Throw;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +14,11 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddSingleton<IRandomizeService, RandomizeService>();
 builder.Services.AddScoped<SessionStorageService>();
+builder.Services.AddScoped<IThrowRepository, ThrowRepository>();
+builder.Services.AddScoped<IThrowService, ThrowService>();
+
+var dbPath = builder.Configuration.GetValue<string>("Database:Path");
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={dbPath}"));
 
 var app = builder.Build();
 
