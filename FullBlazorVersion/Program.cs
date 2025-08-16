@@ -1,9 +1,9 @@
 using DiceRolls.Components;
 using DiceRolls.Models;
-using DiceRolls.Repositories.Throw;
+using DiceRolls.Repositories.ThrowRepository;
 using DiceRolls.Services.Randomize;
 using DiceRolls.Services.SessionStorage;
-using DiceRolls.Services.Throw;
+using DiceRolls.Services.ThrowService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
