@@ -22,4 +22,11 @@ public class ThrowRepository : IThrowRepository
         
         await transaction.CommitAsync();
     }
+    
+    public async Task<IEnumerable<Throw>> GetThrows(string sessionId)
+    {
+        return await _context.Throw
+                             .Where(x => x.SessionId == sessionId)
+                             .ToListAsync();
+    }
 }
