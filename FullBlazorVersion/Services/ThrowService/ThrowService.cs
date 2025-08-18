@@ -31,4 +31,23 @@ public class ThrowService : IThrowService
 
         await _throwRepository.AddThrow(throwDice);
     }
+    
+    public async Task<IEnumerable<ThrowDiceOutputDto>> GetThrows(string sessionId)
+    {
+        var throws = await _throwRepository.GetThrows(sessionId);
+        var result = new List<ThrowDiceOutputDto>();
+
+        foreach (var elem in throws.OrderByDescending(x => x.Date))
+        {
+            result.Add(new ThrowDiceOutputDto()
+            {
+                Login = elem.Login ?? "",
+                Time = elem.Date.ToLocalTime().ToString("HH:mm:ss"),
+                DiceType = elem.DiceType.ToString().ToLower(),
+                DiceValues = elem.DiceValues.Split(',').Select(x => Convert.ToInt32(x))
+            });
+        }
+        
+        return result;
+    }
 }
