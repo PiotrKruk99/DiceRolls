@@ -1,0 +1,77 @@
+@using DiceRolls.Dtos
+@using DiceRolls.Services.ThrowService
+
+@inject IThrowService ThrowService;
+
+<table>
+    @if (_throws != null && _throws.Any())
+    {
+        foreach (var line in _throws)
+        {
+            <tr>
+                <td class="first"><i><b>@line.Login</b> @line.Time</i></td>
+                <td><b>@line.DiceType</b></td>
+                @foreach (int roll in line.DiceValues)
+                {
+                    <td>@roll.ToString()</td>
+                }
+            </tr>
+        }
+    }
+</table>
+
+@code {
+    [Parameter] public required string SessionId { get; set; }
+
+    [Parameter] public bool AutoRefresh { get; set; }
+
+    [Parameter] public Guid RefreshIndicator { get; set; }
+
+    private IEnumerable<ThrowDiceOutputDto>? _throws;
+    private bool _firstRender = true;
+    private Guid _previousRefreshIndicator;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        RefreshAsync();
+    }
+
+    private async Task RefreshAsync()
+    {
+        while (true)
+        {
+            if (AutoRefresh || _firstRender || _previousRefreshIndicator != RefreshIndicator)
+            {
+                _throws = await ThrowService.GetThrows(SessionId);
+
+                StateHasChanged();
+
+                if (AutoRefresh && !_firstRender && (_previousRefreshIndicator == RefreshIndicator))
+                {
+                    int count = 0;
+
+                    do
+                    {
+                        await Task.Delay(100);
+                    }
+                    while (count++ < 30 && (_previousRefreshIndicator == RefreshIndicator));
+
+                }
+                else
+                {
+                    await Task.Delay(100);
+                }
+
+                if (_firstRender)
+                    _firstRender = false;
+
+                _previousRefreshIndicator = RefreshIndicator;
+            }
+
+            await Task.Delay(100);
+        }
+    }
+
+}
