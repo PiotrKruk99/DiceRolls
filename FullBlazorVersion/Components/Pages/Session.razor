@@ -1,23 +1,151 @@
 ﻿@page "/session/{SessionId}"
+
+@using DiceRolls.Dtos
+@using DiceRolls.Enums
+@using DiceRolls.Services.SessionStorage
+@using DiceRolls.Services.ThrowService
+@using DiceRolls.Components.Shared
+
 @rendermode InteractiveServer
 
-<PageTitle>Session</PageTitle>
+@inject SessionStorageService SessionStorage
+@inject IThrowService ThrowService;
 
-<h1>Counter</h1>
-<p>@SessionId</p>
+<PageTitle>DiceRolls</PageTitle>
 
-<p role="status">Current count: @currentCount</p>
+<h2>Dice Rolls - wspólne rzuty kośćmi</h2>
+<label>login: </label>
+@if (string.IsNullOrWhiteSpace(_login))
+{
+    <InputText @bind-Value="_loginText" type="text" id="login" name="login" maxlength="25"/>
+}
+else
+{
+    <label><b>@_login</b></label>
+}
+<br/><br/>
+<button class="updown" type="button" @onclick="GetDown" disabled="@(_diceCount <= 1)">&lt;</button>
+<InputNumber class="send" type="number" id="diceCount" name="diceCount"
+             @bind-Value=_diceCount TValue="int" @onfocusout="FixDiceCount"
+             min="1" max="30" step="1"/>
+<button class="updown" type="button" @onclick="GetUp" disabled="@(_diceCount >= 30)">></button>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<InputSelect @bind-Value="_diceType" class="send" id="dice" name="diceType">
+    @foreach (var elem in _diceTypes)
+    {
+        if (elem == _diceType)
+        {
+            <option value="@elem" selected>@elem.ToString().ToLower()</option>
+        }
+        else
+        {
+            <option value="@elem">@elem.ToString().ToLower()</option>
+        }
+    }
+</InputSelect>
+
+<button class="send" type="submit" value="ViewBag.UserId" name="rollSend" @onclick="RollDice">Rzut</button>
+
+<hr/>
+<TableRefresh SessionId="@SessionId" RefreshIndicator="@_refreshIndicator" />
+<br/>
+<button type="button" onclick="copyUrl()">Kopiuj adres do schowka</button>
+<br/>
+<p>[Usługa w fazie testów]</p>
+<p>
+    Witamy w usłudze umożliwiającej rzucanie kośćmi na odległość. Aby rozpocząć,
+    skopiuj cały adres z paska adresu przeglądarki lub użyj przycisku powyżej, a następnie
+    wyślij ten adres do osób, z którymi chcesz wspólnie rzucać kośćmi. Wyniki rzutów danej sesji
+    są przechowywane nie krócej jak tydzień i nie dłużej jak dwa tygodnie.
+</p>
+<p>
+    Możesz wpisać swoją nazwę w polu 'login', a ta zostanie zapamiętana dla danej sesji, przy czym nie możesz
+    w tym polu używać znaków '^' i '|'. Aby zobaczyć rzuty znajomych, z którymi współdzielisz sesję,
+    odśwież stronę przy użyciu przycisku w prawym górnym rogu lub zahacz opcję auto-odświeżania. Wybierz ilość kości
+    w zakresie od 1 do 30, rodzaj kości i możesz już rzucać. Dobrej zabawy:)
+</p>
+<hr/>
+<p>
+    <br/><b>Aktualizacje:</b><br/><br/>
+    9-5-2021 - Dodana funkcjonalność zapamiętywania rodzaju ostatnio wybranych kości i ich ilości do
+    wykorzystania przy kolejnym rzucie.<br/><br/>
+    23-8-2021 - Dodana możliwość włączenia auto-odświeżania tabeli wyników.<br/><br/>
+</p>
 
 @code {
-    [Parameter]
-    public required string SessionId { get; set; }
+    [Parameter] public required string SessionId { get; set; }
 
-    private int currentCount = 0;
+    private int _diceCount = 1;
+    private readonly DiceTypeEnum[] _diceTypes = Enum.GetValues<DiceTypeEnum>();
+    private DiceTypeEnum _diceType = DiceTypeEnum.K2;
+    private string _loginText = "";
+    private string _login = "";
+    private Guid _refreshIndicator = Guid.NewGuid();
 
-    private void IncrementCount()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        currentCount++;
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            var storedLogin = await SessionStorage.GetItem("login");
+
+            if (!string.IsNullOrWhiteSpace(storedLogin))
+                _login = storedLogin;
+
+            StateHasChanged();
+        }
+    }
+
+    private void GetDown()
+    {
+        if (_diceCount > 1)
+            _diceCount--;
+
+        FixDiceCount();
+    }
+
+    private void GetUp()
+    {
+        if (_diceCount < 30)
+            _diceCount++;
+
+        FixDiceCount();
+    }
+
+    private void FixDiceCount()
+    {
+        if (_diceCount < 1)
+            _diceCount = 1;
+
+        if (_diceCount > 30)
+            _diceCount = 30;
+    }
+
+    private async Task RollDice()
+    {
+        await SetLogin();
+
+        await ThrowService.ThrowDice(new ThrowDiceInputDto()
+        {
+            SessionId = SessionId,
+            Count = _diceCount,
+            DiceType = _diceType,
+            Login = _login
+        });
+        
+        _refreshIndicator = Guid.NewGuid();
+
+        StateHasChanged();
+    }
+
+    private async Task SetLogin()
+    {
+        if (!string.IsNullOrWhiteSpace(_loginText))
+        {
+            _login = _loginText.Trim();
+            _loginText = "";
+            await SessionStorage.SetItem("login", _login);
+        }
     }
 }
