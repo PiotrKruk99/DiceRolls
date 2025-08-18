@@ -1,11 +1,12 @@
 ﻿@inherits LayoutComponentBase
-
+<div class="error">
+    <p></p>
+</div>
+<div class="refresh">
+    <button class="send" type="button" onclick="document.location.reload(true)">Odśwież</button>
+</div>
 <div class="page">
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
         <article class="content px-4">
             @Body
         </article>
