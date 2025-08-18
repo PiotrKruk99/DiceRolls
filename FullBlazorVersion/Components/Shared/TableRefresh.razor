@@ -1,0 +1,44 @@
+@using DiceRolls.Services.SessionStorage
+
+@inject SessionStorageService SessionStorage
+
+<DiceTable SessionId="@SessionId" AutoRefresh="@_autoRefresh" RefreshIndicator="@_refreshIndicator"/>
+<InputCheckbox class="checkbox" type="checkbox" id="autoRefresh" @bind-Value="_autoRefresh"
+               @bind-Value:after="AutorefreshChanged"/>
+<label class="checkbox" for="autoRefresh">auto odświeżanie</label>
+
+@code {
+    [Parameter] public required string SessionId { get; set; }
+
+    [Parameter]
+    public Guid RefreshIndicator
+    {
+        get => _refreshIndicator;
+        set => _refreshIndicator = value;
+    }
+
+    private bool _autoRefresh;
+    private Guid _refreshIndicator;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var valueString = await SessionStorage.GetItem("autoRefresh");
+
+            if (valueString == "true")
+                _autoRefresh = true;
+            else
+                _autoRefresh = false;
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task AutorefreshChanged()
+    {
+        var valueString = _autoRefresh ? "true" : "false";
+        await SessionStorage.SetItem("autoRefresh", valueString);
+    }
+
+}
