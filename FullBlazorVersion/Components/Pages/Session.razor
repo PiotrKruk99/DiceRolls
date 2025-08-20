@@ -5,6 +5,7 @@
 @using DiceRolls.Services.SessionStorage
 @using DiceRolls.Services.ThrowService
 @using DiceRolls.Components.Shared
+@using DiceRolls.Extensions
 
 @rendermode InteractiveServer
 
@@ -90,9 +91,17 @@ else
         if (firstRender)
         {
             var storedLogin = await SessionStorage.GetItem("login");
+            var storedDiceCount = await SessionStorage.GetItem("diceCount");
+            var storedDiceType = await SessionStorage.GetItem("diceType");
 
             if (!string.IsNullOrWhiteSpace(storedLogin))
                 _login = storedLogin;
+
+            if (!storedDiceCount.IsNullOrEmpty())
+                _diceCount = Convert.ToInt32(storedDiceCount);
+
+            if (!storedDiceType.IsNullOrEmpty())
+                Enum.TryParse<DiceTypeEnum>(storedDiceType, out _diceType);
 
             StateHasChanged();
         }
@@ -125,7 +134,7 @@ else
 
     private async Task RollDice()
     {
-        await SetLogin();
+        await SetLoginAndDice();
 
         await ThrowService.ThrowDice(new ThrowDiceInputDto()
         {
@@ -140,7 +149,7 @@ else
         StateHasChanged();
     }
 
-    private async Task SetLogin()
+    private async Task SetLoginAndDice()
     {
         if (!string.IsNullOrWhiteSpace(_loginText))
         {
@@ -148,5 +157,9 @@ else
             _loginText = "";
             await SessionStorage.SetItem("login", _login);
         }
+        
+        
+        await SessionStorage.SetItem("diceType", _diceType.ToString());
+        await SessionStorage.SetItem("diceCount", _diceCount.ToString());
     }
 }
