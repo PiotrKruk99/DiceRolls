@@ -1,6 +1,7 @@
 using DiceRolls.Components;
 using DiceRolls.Models;
 using DiceRolls.Repositories.ThrowRepository;
+using DiceRolls.Services.DataCleanup;
 using DiceRolls.Services.Randomize;
 using DiceRolls.Services.SessionStorage;
 using DiceRolls.Services.ThrowService;
@@ -16,6 +17,12 @@ builder.Services.AddSingleton<IRandomizeService, RandomizeService>();
 builder.Services.AddScoped<SessionStorageService>();
 builder.Services.AddScoped<IThrowRepository, ThrowRepository>();
 builder.Services.AddScoped<IThrowService, ThrowService>();
+
+builder.Services.Configure<HostOptions>(x =>
+{
+    x.ServicesStartConcurrently = true;
+});
+builder.Services.AddHostedService<DataCleanupService>();
 
 var dbPath = builder.Configuration.GetValue<string>("Database:Path");
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={dbPath}"));
