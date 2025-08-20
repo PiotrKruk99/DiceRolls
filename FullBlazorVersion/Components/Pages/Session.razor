@@ -101,7 +101,7 @@ else
                 _diceCount = Convert.ToInt32(storedDiceCount);
 
             if (!storedDiceType.IsNullOrEmpty())
-                Enum.TryParse<DiceTypeEnum>(storedDiceType, out _diceType);
+                Enum.TryParse(storedDiceType, out _diceType);
 
             StateHasChanged();
         }
