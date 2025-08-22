@@ -12,67 +12,82 @@
 @inject SessionStorageService SessionStorage
 @inject IThrowService ThrowService;
 
-<PageTitle>DiceRolls</PageTitle>
+<ErrorMessage/>
+<div class="refresh">
+    <button class="send" type="button" onclick="document.location.reload()">Odśwież</button>
+</div>
 
-<h2>Dice Rolls - wspólne rzuty kośćmi</h2>
-<label>login: </label>
-@if (string.IsNullOrWhiteSpace(_login))
-{
-    <InputText @bind-Value="_loginText" type="text" id="login" name="login" maxlength="25"/>
-}
-else
-{
-    <label><b>@_login</b></label>
-}
-<br/><br/>
-<button class="updown" type="button" @onclick="GetDown" disabled="@(_diceCount <= 1)">&lt;</button>
-<InputNumber class="send" type="number" id="diceCount" name="diceCount"
-             @bind-Value=_diceCount TValue="int" @onfocusout="FixDiceCount"
-             min="1" max="30" step="1"/>
-<button class="updown" type="button" @onclick="GetUp" disabled="@(_diceCount >= 30)">></button>
+<div class="page">
+    <main>
+        <article class="content px-4">
 
-<InputSelect @bind-Value="_diceType" class="send" id="dice" name="diceType">
-    @foreach (var elem in _diceTypes)
-    {
-        if (elem == _diceType)
-        {
-            <option value="@elem" selected>@elem.ToString().ToLower()</option>
-        }
-        else
-        {
-            <option value="@elem">@elem.ToString().ToLower()</option>
-        }
-    }
-</InputSelect>
+            <PageTitle>DiceRolls</PageTitle>
 
-<button class="send" type="submit" value="ViewBag.UserId" name="rollSend" @onclick="RollDice">Rzut</button>
+            <h2>Dice Rolls - wspólne rzuty kośćmi</h2>
+            <label>login: </label>
+            @if (string.IsNullOrWhiteSpace(_login))
+            {
+                <InputText @bind-Value="_loginText" type="text" id="login" name="login" maxlength="25"/>
+            }
+            else
+            {
+                <label><b>@_login</b></label>
+            }
+            <br/><br/>
+            <button class="updown" type="button" @onclick="GetDown" disabled="@(_diceCount <= 1)">&lt;</button>
+            <InputNumber class="send" type="number" id="diceCount" name="diceCount"
+                         @bind-Value=_diceCount TValue="int" @onfocusout="FixDiceCount"
+                         min="1" max="30" step="1"/>
+            <button class="updown" type="button" @onclick="GetUp" disabled="@(_diceCount >= 30)">></button>
 
-<hr/>
-<TableRefresh SessionId="@SessionId" RefreshIndicator="@_refreshIndicator" />
-<br/>
-<button type="button" onclick="copyUrl()">Kopiuj adres do schowka</button>
-<br/>
-<p>[Usługa w fazie testów]</p>
-<p>
-    Witamy w usłudze umożliwiającej rzucanie kośćmi na odległość. Aby rozpocząć,
-    skopiuj cały adres z paska adresu przeglądarki lub użyj przycisku powyżej, a następnie
-    wyślij ten adres do osób, z którymi chcesz wspólnie rzucać kośćmi. Wyniki rzutów danej sesji
-    są przechowywane nie krócej jak tydzień i nie dłużej jak dwa tygodnie.
-</p>
-<p>
-    Możesz wpisać swoją nazwę w polu 'login', a ta zostanie zapamiętana dla danej sesji. Aby zobaczyć rzuty znajomych, 
-    z którymi współdzielisz sesję, odśwież stronę przy użyciu przycisku w prawym górnym rogu lub zahacz 
-    opcję auto-odświeżania. Wybierz ilość kości w zakresie od 1 do 30, rodzaj kości i możesz już rzucać. Dobrej zabawy:)
-</p>
-<hr/>
-<p>
-    <br/><b>Aktualizacje:</b><br/><br/>
-    9-5-2021 - Dodana funkcjonalność zapamiętywania rodzaju ostatnio wybranych kości i ich ilości do
-    wykorzystania przy kolejnym rzucie.<br/><br/>
-    23-8-2021 - Dodana możliwość włączenia auto-odświeżania tabeli wyników.<br/><br/>
-    2-8-2025 - Gruntowna przebudowa aplikacji z zachowaniem dotychczasowej jej funkcjonalności. Usprawnienie silnika 
-    wykorzystywanego do generowania rzutów.<br/><br/>
-</p>
+            <InputSelect @bind-Value="_diceType" class="send" id="dice" name="diceType">
+                @foreach (var elem in _diceTypes)
+                {
+                    if (elem == _diceType)
+                    {
+                        <option value="@elem" selected>@elem.ToString().ToLower()</option>
+                    }
+                    else
+                    {
+                        <option value="@elem">@elem.ToString().ToLower()</option>
+                    }
+                }
+            </InputSelect>
+
+            <button class="send" type="submit" value="ViewBag.UserId" name="rollSend" @onclick="RollDice">Rzut</button>
+
+            <hr/>
+            <TableRefresh SessionId="@SessionId" RefreshIndicator="@_refreshIndicator"/>
+            <br/>
+            <button type="button" onclick="copyUrl()">Kopiuj adres do schowka</button>
+            <br/>
+            <p>[Usługa w fazie testów]</p>
+            <p>
+                Witamy w usłudze umożliwiającej rzucanie kośćmi na odległość. Aby rozpocząć,
+                skopiuj cały adres z paska adresu przeglądarki lub użyj przycisku powyżej, a następnie
+                wyślij ten adres do osób, z którymi chcesz wspólnie rzucać kośćmi. Wyniki rzutów danej sesji
+                są przechowywane nie krócej jak tydzień i nie dłużej jak dwa tygodnie.
+            </p>
+            <p>
+                Możesz wpisać swoją nazwę w polu 'login', a ta zostanie zapamiętana dla danej sesji. Aby zobaczyć rzuty
+                znajomych,
+                z którymi współdzielisz sesję, odśwież stronę przy użyciu przycisku w prawym górnym rogu lub zahacz
+                opcję auto-odświeżania. Wybierz ilość kości w zakresie od 1 do 30, rodzaj kości i możesz już rzucać.
+                Dobrej zabawy:)
+            </p>
+            <hr/>
+            <p>
+                <br/><b>Aktualizacje:</b><br/><br/>
+                9-5-2021 - Dodana funkcjonalność zapamiętywania rodzaju ostatnio wybranych kości i ich ilości do
+                wykorzystania przy kolejnym rzucie.<br/><br/>
+                23-8-2021 - Dodana możliwość włączenia auto-odświeżania tabeli wyników.<br/><br/>
+                20-8-2025 - Gruntowna przebudowa aplikacji z zachowaniem dotychczasowej jej funkcjonalności.
+                Usprawnienie silnika
+                wykorzystywanego do generowania rzutów.<br/><br/>
+            </p>
+        </article>
+    </main>
+</div>
 
 @code {
     [Parameter] public required string SessionId { get; set; }
@@ -157,8 +172,7 @@ else
             _loginText = "";
             await SessionStorage.SetItem("login", _login);
         }
-        
-        
+
         await SessionStorage.SetItem("diceType", _diceType.ToString());
         await SessionStorage.SetItem("diceCount", _diceCount.ToString());
     }
