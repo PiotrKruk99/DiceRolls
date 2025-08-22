@@ -1,0 +1,25 @@
+@using DiceRolls.Services.ErrorMessage
+
+@inject IErrorMessageService ErrorMessageService
+
+<div class="error">
+    <p>@_errorMessage</p>
+</div>
+
+@code
+{
+    private string _errorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        ErrorMessageService.AddGlobalEventToWatch(HandleEvent);
+    }
+
+    private void HandleEvent()
+    {
+        _errorMessage = ErrorMessageService.GetGlobalErrorMessage();
+        InvokeAsync(() => StateHasChanged());
+    }
+}
