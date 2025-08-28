@@ -8,18 +8,35 @@
 
 @code
 {
+    [Parameter] public required string SessionId { get; set; }
     private string _errorMessage = "";
+    private Timer? _timer;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         
-        ErrorMessageService.AddGlobalEventToWatch(HandleEvent);
+        // ErrorMessageService.AddGlobalEventToWatch(HandleGlobalEvent);
+        ErrorMessageService.AddSessionEventToWatch(HandleSessionEvent, SessionId);
     }
 
-    private void HandleEvent()
+    private void HandleGlobalEvent()
     {
         _errorMessage = ErrorMessageService.GetGlobalErrorMessage();
-        InvokeAsync(() => StateHasChanged());
+        InvokeAsync(StateHasChanged);
+    }
+    
+    private void HandleSessionEvent()
+    {
+        _errorMessage = ErrorMessageService.GetSessionErrorMessage(SessionId);
+        _timer = new Timer(MessageReset, null, TimeSpan.FromSeconds(5), Timeout.InfiniteTimeSpan);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void MessageReset(object? state)
+    {
+        _errorMessage = "";
+        InvokeAsync(StateHasChanged);
+        _timer?.Dispose();
     }
 }
