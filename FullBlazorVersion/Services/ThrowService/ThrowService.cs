@@ -57,7 +57,7 @@ public class ThrowService : IThrowService
                 result.Add(new ThrowDiceOutputDto()
                 {
                     Login = elem.Login ?? "",
-                    Time = elem.Date.ToLocalTime().ToString("HH:mm:ss"),
+                    Time = elem.Date.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss"),
                     DiceType = elem.DiceType.ToString().ToLower(),
                     DiceValues = elem.DiceValues.Split(',').Select(x => Convert.ToInt32(x))
                 });
