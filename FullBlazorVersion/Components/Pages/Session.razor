@@ -6,10 +6,12 @@
 @using DiceRolls.Services.ThrowService
 @using DiceRolls.Components.Shared
 @using DiceRolls.Extensions
+@using DiceRolls.Services.JsDom
 
 @rendermode InteractiveServer
 
 @inject SessionStorageService SessionStorage
+@inject JsDomService JsDom;
 @inject IThrowService ThrowService;
 
 <ErrorMessage SessionId="@SessionId"/>
@@ -59,7 +61,7 @@
             <hr/>
             <TableRefresh SessionId="@SessionId" RefreshIndicator="@_refreshIndicator"/>
             <br/>
-            <button type="button" onclick="copyUrl()">Kopiuj adres do schowka</button>
+            <button type="button" @onclick="CopyUrl">Kopiuj adres do schowka</button>
             <br/>
             <p>[Usługa w fazie testów]</p>
             <p>
@@ -176,5 +178,10 @@
 
         await SessionStorage.SetItem("diceType", _diceType.ToString());
         await SessionStorage.SetItem("diceCount", _diceCount.ToString());
+    }
+
+    private async Task CopyUrl()
+    {
+        await JsDom.CopyAppUrl();
     }
 }

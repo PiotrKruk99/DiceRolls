@@ -3,6 +3,7 @@ using DiceRolls.Models;
 using DiceRolls.Repositories.ThrowRepository;
 using DiceRolls.Services.DataCleanup;
 using DiceRolls.Services.ErrorMessage;
+using DiceRolls.Services.JsDom;
 using DiceRolls.Services.Randomize;
 using DiceRolls.Services.SessionStorage;
 using DiceRolls.Services.ThrowService;
@@ -16,6 +17,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddSingleton<IRandomizeService, RandomizeService>();
 builder.Services.AddScoped<SessionStorageService>();
+builder.Services.AddScoped<JsDomService>();
 builder.Services.AddScoped<IThrowRepository, ThrowRepository>();
 builder.Services.AddScoped<IThrowService, ThrowService>();
 builder.Services.AddSingleton<IErrorMessageService, ErrorMessageService>();

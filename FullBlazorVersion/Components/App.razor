@@ -25,22 +25,13 @@
             sessionStorage.removeItem(key);
         }
     };
-
-    function copyUrl() {
-        const ele = document.createElement('textarea');
-        ele.value = window.location.href;
-        ele.setAttribute('readonly', true)
-        // Following styling is to avoid flashing textarea on screen
-        ele.style.position = 'absolute';
-        ele.style.padding = 0;
-        ele.style.background = 'transparent';
-        ele.style.outline = 'none';
-        ele.style.left = '-100%';
-        document.body.appendChild(ele);
-        ele.select();
-        document.execCommand('copy');
-        document.body.removeChild(ele);
-    }
+    
+    window.JSDOMInterop = {
+        copyAppUrl: async function () {
+            const  url = window.location.href;
+            await  navigator.clipboard.writeText(url);
+        }
+    };
 </script>
 </body>
 
